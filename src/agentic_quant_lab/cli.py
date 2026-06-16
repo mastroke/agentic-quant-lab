@@ -5,15 +5,27 @@ from agentic_quant_lab.backtest import run_moving_average_backtest
 from agentic_quant_lab.data import load_demo_prices
 from agentic_quant_lab.planner import build_research_plan
 from agentic_quant_lab.risk import evaluate_risk
+from agentic_quant_lab.walk_forward import run_walk_forward_backtest
 
 
 def build_report(symbol: str, cash: float) -> dict:
     plan = build_research_plan(symbol)
     prices = load_demo_prices()
-    result = run_moving_average_backtest(prices=prices, cash=cash)
+    result = run_moving_average_backtest(
+        prices=prices,
+        cash=cash,
+        costs=plan.cost_assumptions,
+    )
+    walk_forward = run_walk_forward_backtest(
+        prices=prices,
+        cash=cash,
+        n_folds=plan.walk_forward.n_folds,
+        costs=plan.cost_assumptions,
+    )
     risk = evaluate_risk(result)
 
     return {
+        "experiment_plan": plan.to_artifact(),
         "symbol": plan.symbol,
         "hypothesis": plan.hypothesis,
         "strategy": plan.strategy,
@@ -23,6 +35,8 @@ def build_report(symbol: str, cash: float) -> dict:
         "max_drawdown": round(result.max_drawdown, 4),
         "volatility": round(result.volatility, 4),
         "trades": result.trades,
+        "cost_drag": round(result.cost_drag, 6),
+        "walk_forward": walk_forward.to_summary(),
         "risk_notes": risk.notes,
         "equity_curve_tail": result.equity_curve,
     }

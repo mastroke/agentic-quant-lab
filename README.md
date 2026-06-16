@@ -28,6 +28,8 @@ flowchart LR
 | Data loader | Provide reproducible market input, synthetic or real |
 | Simulator | Run a transparent strategy baseline such as MA crossover |
 | Risk engine | Enforce drawdown, volatility and activity constraints |
+| Walk-forward | Evaluate strategy on contiguous out-of-sample folds |
+| Cost model | Apply commission and slippage on position changes |
 | Report | Emit structured JSON for review, CI or downstream tooling |
 
 ## Design Thinking
@@ -61,7 +63,9 @@ pytest
 
 ## Evolution Path
 
-- Walk-forward validation and regime splits
-- Transaction cost and slippage models
+- Regime labels on walk-forward folds
+- FinRL-style train/test embargo windows
+- LangGraph adapter for planner orchestration
 - Experiment tracking and artifact export
-- FinRL-style environment adapters behind the same planner interface
+
+See [docs/upstream-learning.md](docs/upstream-learning.md) for adopted patterns from vectorbt, backtesting.py and LangGraph.
