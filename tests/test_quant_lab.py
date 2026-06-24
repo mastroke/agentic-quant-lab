@@ -1,4 +1,4 @@
-from agentic_quant_lab.backtest import run_moving_average_backtest
+from agentic_quant_lab.backtest import BacktestResult, run_moving_average_backtest
 from agentic_quant_lab.cli import build_report
 from agentic_quant_lab.costs import CostAssumptions
 from agentic_quant_lab.data import load_demo_prices
@@ -51,6 +51,21 @@ def test_risk_decision_is_bounded() -> None:
 
     assert decision.decision in {"paper_trade_only", "research_only"}
     assert decision.notes
+
+
+def test_risk_rejects_when_drawdown_exceeds_limit() -> None:
+    result = BacktestResult(
+        total_return=0.05,
+        max_drawdown=-0.20,
+        volatility=0.10,
+        trades=3,
+        equity_curve=[10_000.0],
+    )
+
+    decision = evaluate_risk(result)
+
+    assert decision.decision == "research_only"
+    assert any("drawdown" in note.lower() for note in decision.notes)
 
 
 def test_report_is_reviewable() -> None:
