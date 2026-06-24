@@ -27,6 +27,7 @@ flowchart LR
 | Planner | Turn a research brief into a deterministic experiment plan |
 | Data loader | Provide reproducible market input, synthetic or real |
 | Simulator | Run a transparent strategy baseline such as MA crossover |
+| Position sizing | Scale exposure to a volatility target with bounded weights |
 | Risk engine | Enforce drawdown, volatility and activity constraints |
 | Walk-forward | Evaluate strategy on contiguous out-of-sample folds |
 | Cost model | Apply commission and slippage on position changes |
