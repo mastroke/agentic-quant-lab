@@ -1,9 +1,12 @@
+import pytest
+
 from agentic_quant_lab.backtest import BacktestResult, run_moving_average_backtest
 from agentic_quant_lab.cli import build_report
 from agentic_quant_lab.costs import CostAssumptions
 from agentic_quant_lab.data import load_demo_prices
 from agentic_quant_lab.planner import build_research_plan
 from agentic_quant_lab.risk import evaluate_risk
+from agentic_quant_lab.sizing import VolatilityTarget, volatility_target_exposure
 from agentic_quant_lab.walk_forward import run_walk_forward_backtest
 
 
@@ -66,6 +69,43 @@ def test_risk_rejects_when_drawdown_exceeds_limit() -> None:
 
     assert decision.decision == "research_only"
     assert any("drawdown" in note.lower() for note in decision.notes)
+
+
+def test_volatility_target_scales_inversely_with_realized_vol() -> None:
+    config = VolatilityTarget(target_volatility=0.20, min_exposure=0.0, max_exposure=1.0)
+
+    assert volatility_target_exposure(0.20, config) == 1.0
+    assert volatility_target_exposure(0.40, config) == 0.5
+
+
+def test_volatility_target_clips_to_bounds() -> None:
+    config = VolatilityTarget(
+        target_volatility=0.15,
+        min_exposure=0.10,
+        max_exposure=0.80,
+        vol_floor=1e-8,
+    )
+
+    assert volatility_target_exposure(0.01, config) == 0.80
+    assert volatility_target_exposure(5.0, config) == 0.10
+
+
+def test_volatility_target_uses_floor_for_near_zero_vol() -> None:
+    config = VolatilityTarget(target_volatility=0.15, max_exposure=1.0, vol_floor=0.05)
+
+    assert volatility_target_exposure(0.0, config) == 1.0
+    assert volatility_target_exposure(1e-12, config) == 1.0
+
+
+def test_volatility_target_rejects_invalid_inputs() -> None:
+    with pytest.raises(ValueError, match="target_volatility"):
+        VolatilityTarget(target_volatility=0.0)
+
+    with pytest.raises(ValueError, match="max_exposure"):
+        VolatilityTarget(min_exposure=0.5, max_exposure=0.2)
+
+    with pytest.raises(ValueError, match="realized_volatility"):
+        volatility_target_exposure(-0.01)
 
 
 def test_report_is_reviewable() -> None:
