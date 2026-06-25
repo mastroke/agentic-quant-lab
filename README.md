@@ -32,6 +32,7 @@ flowchart LR
 | Walk-forward | Evaluate strategy on contiguous out-of-sample folds |
 | Cost model | Apply commission and slippage on position changes |
 | Metrics | Sharpe, Sortino and Calmar ratios on return series |
+| Benchmark | Compare strategy alpha and drawdown vs buy-and-hold |
 | Report | Emit structured JSON for review, CI or downstream tooling |
 
 ## Design Thinking
@@ -59,6 +60,12 @@ pytest
   "decision": "paper_trade_only",
   "total_return": 0.084,
   "max_drawdown": -0.031,
+  "benchmark": {
+    "name": "buy_and_hold",
+    "total_return": 0.062,
+    "alpha": 0.022,
+    "relative_drawdown": 0.004
+  },
   "risk_notes": ["Strategy passed drawdown and volatility limits."]
 }
 ```

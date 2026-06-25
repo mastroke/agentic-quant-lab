@@ -114,5 +114,8 @@ def test_report_is_reviewable() -> None:
     assert report["symbol"] == "DEMO"
     assert "experiment_plan" in report
     assert "walk_forward" in report
+    assert "benchmark" in report
+    assert report["benchmark"]["name"] == "buy_and_hold"
+    assert "alpha" in report["benchmark"]
     assert "risk_notes" in report
     assert report["decision"] in {"paper_trade_only", "research_only"}
