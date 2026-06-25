@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from agentic_quant_lab.costs import CostAssumptions
+from agentic_quant_lab.costs import CostAssumptions, compute_trade_costs
 
 
 @dataclass(frozen=True)
@@ -35,7 +35,8 @@ def run_moving_average_backtest(
     frame["position"] = frame["signal"].shift(1).fillna(0)
     frame["asset_return"] = frame["close"].pct_change().fillna(0)
     frame["position_change"] = frame["position"].diff().abs().fillna(0)
-    frame["trade_cost"] = frame["position_change"] * assumptions.per_trade_rate
+    spread = frame["spread_bps"] if "spread_bps" in frame.columns else None
+    frame["trade_cost"] = compute_trade_costs(frame["position_change"], assumptions, spread)
     frame["strategy_return"] = frame["position"] * frame["asset_return"] - frame["trade_cost"]
     frame["equity"] = cash * (1 + frame["strategy_return"]).cumprod()
 
