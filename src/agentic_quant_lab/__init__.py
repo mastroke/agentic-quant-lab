@@ -1,6 +1,7 @@
 """Agentic quantitative research lab."""
 
 from agentic_quant_lab.backtest import BacktestResult, run_moving_average_backtest
+from agentic_quant_lab.boundary import ALLOWED_DECISIONS, ExecutionMode, validate_decision
 from agentic_quant_lab.metrics import (
     RiskAdjustedMetrics,
     calmar_ratio,
@@ -14,7 +15,9 @@ from agentic_quant_lab.sizing import VolatilityTarget, volatility_target_exposur
 from agentic_quant_lab.sweep import sweep_moving_average_windows
 
 __all__ = [
+    "ALLOWED_DECISIONS",
     "BacktestResult",
+    "ExecutionMode",
     "RiskAdjustedMetrics",
     "RiskDecision",
     "VolatilityTarget",
@@ -26,6 +29,7 @@ __all__ = [
     "sharpe_ratio",
     "sortino_ratio",
     "sweep_moving_average_windows",
+    "validate_decision",
     "volatility_target_exposure",
 ]
 

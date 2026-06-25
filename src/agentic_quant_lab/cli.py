@@ -3,6 +3,7 @@ import json
 
 from agentic_quant_lab.backtest import run_moving_average_backtest
 from agentic_quant_lab.benchmark import compare_to_benchmark, run_buy_and_hold_backtest
+from agentic_quant_lab.boundary import validate_decision
 from agentic_quant_lab.data import load_demo_prices
 from agentic_quant_lab.planner import build_research_plan
 from agentic_quant_lab.risk import evaluate_risk
@@ -29,6 +30,7 @@ def build_report(symbol: str, cash: float) -> dict:
         costs=plan.cost_assumptions,
     )
     risk = evaluate_risk(result)
+    decision = validate_decision(risk.decision).value
 
     return {
         "experiment_plan": plan.to_artifact(),
@@ -36,7 +38,7 @@ def build_report(symbol: str, cash: float) -> dict:
         "hypothesis": plan.hypothesis,
         "strategy": plan.strategy,
         "guardrails": plan.guardrails,
-        "decision": risk.decision,
+        "decision": decision,
         "total_return": round(result.total_return, 4),
         "max_drawdown": round(result.max_drawdown, 4),
         "volatility": round(result.volatility, 4),
