@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 
 from agentic_quant_lab.backtest import BacktestResult
+from agentic_quant_lab.boundary import ExecutionMode, validate_decision
 
 
 @dataclass(frozen=True)
 class RiskDecision:
     decision: str
     notes: list[str]
+
+    def __post_init__(self) -> None:
+        validate_decision(self.decision)
 
 
 def evaluate_risk(
@@ -24,10 +28,10 @@ def evaluate_risk(
         notes.append("Rejected: no trades were generated.")
 
     if notes:
-        return RiskDecision(decision="research_only", notes=notes)
+        return RiskDecision(decision=ExecutionMode.RESEARCH_ONLY.value, notes=notes)
 
     return RiskDecision(
-        decision="paper_trade_only",
+        decision=ExecutionMode.PAPER_TRADE_ONLY.value,
         notes=["Strategy passed drawdown, volatility and activity limits."],
     )
 
