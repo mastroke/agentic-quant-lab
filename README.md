@@ -39,7 +39,7 @@ flowchart LR
 
 - **Determinism before complexity** — a simple simulator makes the pipeline testable.
 - **Risk as a gate, not a footnote** — strategy output must pass explicit limits.
-- **Research-only boundary** — no broker integration; paper-trading is the maximum scope.
+- **Research-only boundary** — no broker integration; paper-trading is the maximum scope. Enforcement layers are documented in [ADR 0006](docs/adr/0006-research-execution-boundary-enforcement.md).
 - **Agent as planner, not trader** — the agent proposes experiments; the simulator and risk engine decide outcomes.
 
 ## Quick Start
