@@ -11,6 +11,7 @@ from agentic_quant_lab.metrics import (
 )
 from agentic_quant_lab.risk import RiskDecision, evaluate_risk
 from agentic_quant_lab.sizing import VolatilityTarget, volatility_target_exposure
+from agentic_quant_lab.sweep import sweep_moving_average_windows
 
 __all__ = [
     "BacktestResult",
@@ -24,6 +25,7 @@ __all__ = [
     "run_moving_average_backtest",
     "sharpe_ratio",
     "sortino_ratio",
+    "sweep_moving_average_windows",
     "volatility_target_exposure",
 ]
 
