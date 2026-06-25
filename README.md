@@ -30,7 +30,7 @@ flowchart LR
 | Position sizing | Scale exposure to a volatility target with bounded weights |
 | Risk engine | Enforce drawdown, volatility and activity constraints |
 | Walk-forward | Evaluate strategy on contiguous out-of-sample folds |
-| Cost model | Apply commission and slippage on position changes |
+| Cost model | Apply commission and pluggable slippage (fixed, proportional, spread-based) on position changes |
 | Metrics | Sharpe, Sortino and Calmar ratios on return series |
 | Benchmark | Compare strategy alpha and drawdown vs buy-and-hold |
 | Report | Emit structured JSON for review, CI or downstream tooling |
